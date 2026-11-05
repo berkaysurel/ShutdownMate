@@ -1,0 +1,132 @@
+<UserControl
+    x:Class="ShutdownMate.Controls.TimeSpinner"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Width="120">
+
+    <UserControl.Resources>
+        <!-- Kenarlıksız, yuvarlak köşeli ok düğmesi; basılı tutunca tekrarlar. -->
+        <Style x:Key="SpinnerChevronButtonStyle" TargetType="{x:Type RepeatButton}">
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Height" Value="34" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Delay" Value="400" />
+            <Setter Property="Interval" Value="80" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Border
+                            x:Name="ButtonBorder"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="8"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                RecognizesAccessKey="False" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource SubtleFillColorTertiaryBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.4" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Border
+        x:Name="RootBorder"
+        Padding="6"
+        Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}"
+        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+        BorderThickness="1"
+        CornerRadius="12">
+        <StackPanel>
+
+            <!-- Artır -->
+            <RepeatButton
+                x:Name="UpButton"
+                Click="OnUpClick"
+                Style="{StaticResource SpinnerChevronButtonStyle}"
+                ToolTip="{DynamicResource Spinner_Artir}">
+                <ui:SymbolIcon
+                    FontSize="18"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Symbol="ChevronUp24" />
+            </RepeatButton>
+
+            <!-- Değer: kütüphane stilinin kenarlığı/temizle düğmesi gelmesin diye yalın şablon -->
+            <TextBox
+                x:Name="ValueBox"
+                Margin="0,2"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Background="Transparent"
+                BorderThickness="0"
+                CaretBrush="{DynamicResource TextFillColorPrimaryBrush}"
+                FontFamily="Segoe UI Variable Display, Segoe UI"
+                FontSize="48"
+                FontWeight="Light"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                InputMethod.IsInputMethodEnabled="False"
+                MaxLength="2"
+                Padding="0"
+                TextAlignment="Center"
+                TextWrapping="NoWrap"
+                Typography.NumeralAlignment="Tabular"
+                Text="00">
+                <TextBox.Template>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                            <ScrollViewer
+                                x:Name="PART_ContentHost"
+                                Margin="0"
+                                Padding="{TemplateBinding Padding}"
+                                Focusable="False"
+                                HorizontalScrollBarVisibility="Hidden"
+                                VerticalScrollBarVisibility="Hidden" />
+                        </Border>
+                    </ControlTemplate>
+                </TextBox.Template>
+            </TextBox>
+
+            <!-- Azalt -->
+            <RepeatButton
+                x:Name="DownButton"
+                Click="OnDownClick"
+                Style="{StaticResource SpinnerChevronButtonStyle}"
+                ToolTip="{DynamicResource Spinner_Azalt}">
+                <ui:SymbolIcon
+                    FontSize="18"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Symbol="ChevronDown24" />
+            </RepeatButton>
+
+            <!-- Etiket (saat / dakika) -->
+            <TextBlock
+                x:Name="LabelText"
+                Margin="0,4,0,2"
+                HorizontalAlignment="Center"
+                FontSize="13"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Visibility="Collapsed" />
+        </StackPanel>
+    </Border>
+</UserControl>

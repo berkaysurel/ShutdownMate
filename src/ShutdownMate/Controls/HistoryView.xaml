@@ -1,0 +1,154 @@
+<UserControl
+    x:Class="ShutdownMate.Controls.HistoryView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <StackPanel>
+        <TextBlock Style="{StaticResource SectionHeader}" Text="{DynamicResource History_Gecmis}" />
+        <Border Padding="16,12" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="6">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Caption}" Text="{DynamicResource History_BilgisayarinNeZamanVe}" />
+                <StackPanel x:Name="HistoryList" Margin="0,10,0,0" />
+                <ui:Button Margin="-4,8,0,0" HorizontalAlignment="Left" Appearance="Transparent" Content="{DynamicResource History_GecmisiTemizle}" Icon="{ui:SymbolIcon Delete24}" ToolTip="{DynamicResource History_TumGecmisKayitlariniGozetim}" Click="ClearHistory_Click" />
+            </StackPanel>
+        </Border>
+
+        <TextBlock Style="{StaticResource SectionHeader}" Text="{DynamicResource History_GozetimKaydi}" />
+        <ui:CardControl Margin="0,0,0,4" Icon="{ui:SymbolIcon Eye24}">
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource History_SizYokkenOlanlariKaydet}" />
+                    <TextBlock Style="{StaticResource Caption}" Text="{DynamicResource History_ZamanlayiciCalisirkenProgram}" />
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ui:ToggleSwitch x:Name="WatchEnabled" ToolTip="{DynamicResource History_GozetimKaydiniAcarYa}" PreviewMouseLeftButtonDown="WatchEnabled_PreviewMouseLeftButtonDown" PreviewKeyDown="WatchEnabled_PreviewKeyDown" Checked="WatchEnabled_Changed" Unchecked="WatchEnabled_Changed" />
+        </ui:CardControl>
+
+        <StackPanel x:Name="WatchOptions">
+            <ui:CardControl Margin="0,0,0,4" Icon="{ui:SymbolIcon Camera24}">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource History_EkranGoruntusuAl}" />
+                        <TextBlock Style="{StaticResource Caption}" Text="{DynamicResource History_BastaSorunAnlarindaAra}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch x:Name="WatchScreenshots" Checked="Option_Changed" Unchecked="Option_Changed" />
+            </ui:CardControl>
+            <ui:CardControl Margin="0,0,0,4" Icon="{ui:SymbolIcon Window24}">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource History_GoruntuAlani}" />
+                        <TextBlock Style="{StaticResource Caption}" Text="{DynamicResource History_YalnizcaProgramIslerBitince}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ComboBox x:Name="WatchArea" MinWidth="170" SelectionChanged="Option_Changed">
+                    <ComboBoxItem Content="{DynamicResource History_TumEkran}" />
+                    <ComboBoxItem Content="{DynamicResource History_YalnizcaProgram}" />
+                </ComboBox>
+            </ui:CardControl>
+            <ui:CardControl x:Name="MinimizedCard" Margin="0,0,0,4" Icon="{ui:SymbolIcon Window24}" ToolTipService.ShowOnDisabled="True">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource History_KucultulmusPrograminGoruntus}" />
+                        <TextBlock Style="{StaticResource Caption}" Text="{DynamicResource History_ProgramHerGoruntudeEkran}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch x:Name="WatchMinimized" ToolTip="{DynamicResource History_DeneyselKucultulmusProgramin}" Checked="Option_Changed" Unchecked="Option_Changed" />
+            </ui:CardControl>
+            <ui:CardControl Margin="0,0,0,4" Icon="{ui:SymbolIcon Timer24}">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource History_AraGoruntuSikligi}" />
+                        <TextBlock Style="{StaticResource Caption}" Text="{DynamicResource History_SorunOlmasaDaIsin}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ComboBox x:Name="WatchInterval" MinWidth="170" SelectionChanged="Option_Changed">
+                    <ComboBoxItem Content="{DynamicResource History_Kapali}" Tag="0" />
+                    <ComboBoxItem Content="{DynamicResource History_5DakikadaBir}" Tag="5" />
+                    <ComboBoxItem Content="{DynamicResource History_15DakikadaBir}" Tag="15" />
+                    <ComboBoxItem Content="{DynamicResource History_30DakikadaBir}" Tag="30" />
+                    <ComboBoxItem Content="{DynamicResource History_60DakikadaBir}" Tag="60" />
+                </ComboBox>
+            </ui:CardControl>
+            <ui:CardControl Margin="0,0,0,4" Icon="{ui:SymbolIcon Folder24}">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource History_KayitKlasoru}" />
+                        <TextBlock x:Name="FolderText" Style="{StaticResource Caption}" TextWrapping="Wrap" />
+                        <TextBlock Style="{StaticResource Caption}" Text="{DynamicResource History_KayitlarBuKlasordeSaklanir}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+            </ui:CardControl>
+            <ui:CardControl Margin="0,0,0,4" Icon="{ui:SymbolIcon NumberSymbol24}">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource History_KayitAdinaSiraNumarasi}" />
+                        <TextBlock Style="{StaticResource Caption}" Text="{DynamicResource History_HerKaydinKlasorAdi}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch x:Name="WatchSerial" Checked="Option_Changed" Unchecked="Option_Changed" />
+            </ui:CardControl>
+            <ui:CardControl Margin="0,0,0,4" Icon="{ui:SymbolIcon TextT24}">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource History_EkranGoruntusuneBilgiDamgasi}" />
+                        <TextBlock Style="{StaticResource Caption}" Text="{DynamicResource History_GoruntununSagAltinaOkunakli}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch x:Name="StampEnabled" Checked="Option_Changed" Unchecked="Option_Changed" />
+            </ui:CardControl>
+            <Border x:Name="StampPanel" Margin="0,0,0,4" Padding="16,10" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="6">
+                <StackPanel>
+                    <WrapPanel>
+                        <CheckBox x:Name="StampDate" Content="{DynamicResource History_Tarih}" Margin="0,0,16,0" ToolTip="{DynamicResource History_DamgayaGunAyYil}" Checked="Option_Changed" Unchecked="Option_Changed" />
+                        <CheckBox x:Name="StampTime" Content="{DynamicResource History_Saat}" Margin="0,0,16,0" ToolTip="{DynamicResource History_DamgayaSaatDakikaSaniye}" Checked="Option_Changed" Unchecked="Option_Changed" />
+                        <CheckBox x:Name="StampMode" Content="{DynamicResource History_Mod}" Margin="0,0,16,0" ToolTip="{DynamicResource History_DamgayaZamanlayicininModuYaz}" Checked="Option_Changed" Unchecked="Option_Changed" />
+                        <CheckBox x:Name="StampProgram" Content="{DynamicResource History_IzlenenProgram}" ToolTip="{DynamicResource History_IslerBitinceDeProgram}" Checked="Option_Changed" Unchecked="Option_Changed" />
+                    </WrapPanel>
+                    <TextBlock Style="{StaticResource Caption}" Margin="0,8,0,0" Text="{DynamicResource History_IstegeBagliNotOr}" />
+                    <TextBox x:Name="StampNote" Margin="0,4,0,0" MaxLength="60" ToolTip="{DynamicResource History_DamgayaEklenecekSerbestYazi}" TextChanged="Option_Changed" />
+                </StackPanel>
+            </Border>
+            <ui:CardControl Margin="0,0,0,4" Icon="{ui:SymbolIcon Storage24}">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource History_Saklama}" />
+                        <TextBlock Style="{StaticResource Caption}" Text="{DynamicResource History_SinirlardanBiriAsilincaEn}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <StackPanel Orientation="Horizontal">
+                    <ComboBox x:Name="WatchKeep" MinWidth="120" ToolTip="{DynamicResource History_SaklananEnFazlaKayit}" SelectionChanged="Option_Changed">
+                        <ComboBoxItem Content="{DynamicResource History_Son10}" Tag="10" />
+                        <ComboBoxItem Content="{DynamicResource History_Son30}" Tag="30" />
+                        <ComboBoxItem Content="{DynamicResource History_Son50}" Tag="50" />
+                    </ComboBox>
+                    <ComboBox x:Name="WatchMaxSize" Margin="8,0,0,0" MinWidth="110" ToolTip="{DynamicResource History_KayitlarinKullanabilecegiEnF}" SelectionChanged="Option_Changed">
+                        <ComboBoxItem Content="{DynamicResource History_250Mb}" Tag="250" />
+                        <ComboBoxItem Content="{DynamicResource History_500Mb}" Tag="500" />
+                        <ComboBoxItem Content="{DynamicResource History_1Gb}" Tag="1000" />
+                        <ComboBoxItem Content="{DynamicResource History_2Gb}" Tag="2000" />
+                    </ComboBox>
+                </StackPanel>
+            </ui:CardControl>
+            <ui:CardControl Margin="0,0,0,4" Icon="{ui:SymbolIcon DocumentError24}">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource History_WindowsHataKayitlariniEkle}" />
+                        <TextBlock Style="{StaticResource Caption}" Text="{DynamicResource History_BuSuredekiProgramCokmeleri}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch x:Name="WatchSystemErrors" Checked="Option_Changed" Unchecked="Option_Changed" />
+            </ui:CardControl>
+        </StackPanel>
+
+        <Border Padding="16,12" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="6">
+            <Grid>
+                <TextBlock x:Name="UsageText" VerticalAlignment="Center" Style="{StaticResource Caption}" />
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                    <ui:Button Content="{DynamicResource History_KayitKlasorunuAc}" Icon="{ui:SymbolIcon FolderOpen24}" ToolTip="{DynamicResource History_GozetimKayitlarininVeEkran}" Click="OpenFolder_Click" />
+                    <ui:Button x:Name="DeleteRecordingsButton" Margin="8,0,0,0" Content="{DynamicResource History_KayitlariSil}" Icon="{ui:SymbolIcon Delete24}" ToolTip="{DynamicResource History_TumGozetimKayitlariniVe}" ToolTipService.ShowOnDisabled="True" Click="DeleteRecordings_Click" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </StackPanel>
+</UserControl>

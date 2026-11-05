@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>ShutdownMate</AssemblyName>
+    <RootNamespace>ShutdownMate</RootNamespace>
+    <ApplicationIcon>Assets\ShutdownMate.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+
+    <!-- Sürüm: anlamsal sürümleme (MAJOR.MINOR.PATCH). Her yayında CHANGELOG.md ile birlikte güncellenir. -->
+    <Version>2.6.0</Version>
+    <Product>ShutdownMate</Product>
+    <AssemblyTitle>ShutdownMate</AssemblyTitle>
+    <Authors>Berkay Sürel</Authors>
+    <Company>Berkay Sürel</Company>
+    <Description>Windows için çevrimdışı kapatma, uyku ve yeniden başlatma zamanlayıcısı</Description>
+    <NeutralLanguage>tr</NeutralLanguage>
+    <Copyright>© 2026 Berkay Sürel</Copyright>
+
+    <SatelliteResourceLanguages>tr</SatelliteResourceLanguages>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- https://github.com/lepoco/wpfui (MIT) -->
+    <PackageReference Include="WPF-UI" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\ShutdownMate.ico" />
+    <!-- DSEG7 Classic, SIL Open Font License 1.1 (LICENSES\DSEG-LICENSE.txt) -->
+    <Resource Include="Assets\Fonts\DSEG7Classic-Bold.ttf" />
+  </ItemGroup>
+
+</Project>

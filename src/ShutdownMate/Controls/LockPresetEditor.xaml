@@ -1,0 +1,14 @@
+<UserControl
+    x:Class="ShutdownMate.Controls.LockPresetEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <StackPanel>
+        <TextBlock Margin="0,0,0,8" Style="{StaticResource Caption}" TextWrapping="Wrap" Text="{DynamicResource LockPreset_BuradaYazilanlarEkranaDogrud}" />
+        <StackPanel x:Name="Rows" />
+        <Grid Margin="0,4,0,0">
+            <ui:Button x:Name="AddButton" Content="{DynamicResource LockPreset_MesajEkle}" Icon="{ui:SymbolIcon Add24}" ToolTip="{DynamicResource LockPreset_ListeyeYeniBirHazir}" ToolTipService.ShowOnDisabled="True" Click="AddButton_Click" />
+            <ui:Button x:Name="ResetButton" HorizontalAlignment="Right" Appearance="Transparent" Content="{DynamicResource LockPreset_VarsayilanlaraDon}" ToolTip="{DynamicResource LockPreset_ListeyiIlkHalineGetirir}" Click="ResetButton_Click" />
+        </Grid>
+    </StackPanel>
+</UserControl>

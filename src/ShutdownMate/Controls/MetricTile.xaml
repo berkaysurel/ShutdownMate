@@ -1,0 +1,54 @@
+<UserControl
+    x:Class="ShutdownMate.Controls.MetricTile"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+
+    <!-- Uygulamanın kart dili: 8 px köşe, kart zemini ve kenarlığı, ikon + etiket + değer -->
+    <Border
+        Padding="20,16"
+        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+        BorderThickness="1"
+        CornerRadius="8">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                <ui:SymbolIcon x:Name="TileIcon" FontSize="22" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                <TextBlock x:Name="TileLabel" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="16" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+            <!-- Değer yer yetmezse küçülür; etiket hiç kırpılmaz -->
+            <Viewbox Grid.Column="1" Margin="12,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center" StretchDirection="DownOnly">
+                <TextBlock
+                    x:Name="TileValue"
+                    VerticalAlignment="Center"
+                    FontFamily="Segoe UI Variable Display, Segoe UI"
+                    FontSize="30"
+                    FontWeight="SemiBold"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    Typography.NumeralAlignment="Tabular"
+                    Text="–" />
+            </Viewbox>
+
+            <!-- Son bir dakikanın eğrisi -->
+            <Grid x:Name="SparkHost" Grid.Row="1" Grid.ColumnSpan="2" Height="48" Margin="0,12,0,0" ClipToBounds="True" SizeChanged="SparkHost_SizeChanged">
+                <!-- Eğri her yeni ölçümde bir adım sola kayar; kayma ölçüm aralığı boyunca sürer -->
+                <Grid>
+                    <Grid.RenderTransform>
+                        <TranslateTransform x:Name="SparkShift" />
+                    </Grid.RenderTransform>
+                    <Path x:Name="SparkFill" Fill="{DynamicResource AccentFillColorDefaultBrush}" Opacity="0.35" />
+                    <Path x:Name="SparkLine" Stroke="{DynamicResource AccentTextFillColorPrimaryBrush}" StrokeLineJoin="Round" StrokeThickness="2" />
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

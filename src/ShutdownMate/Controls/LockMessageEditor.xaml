@@ -1,0 +1,27 @@
+<UserControl
+    x:Class="ShutdownMate.Controls.LockMessageEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <StackPanel>
+        <ui:TextBox
+            x:Name="Box"
+            MaxLength="120"
+            PlaceholderText="{DynamicResource LockMsg_EkrandaGorunecekMesajiYazin}"
+            TextChanged="Box_TextChanged"
+            TextWrapping="Wrap" />
+        <Grid Margin="0,8,0,0">
+            <ui:Button x:Name="PresetsButton" Content="{DynamicResource LockMsg_HazirMesajlar}" Icon="{ui:SymbolIcon TextBulletListLtr24}" ToolTip="{DynamicResource LockMsg_HazirBirMesajSecin}" ToolTipService.ShowOnDisabled="True" Click="PresetsButton_Click">
+                <ui:Button.ContextMenu>
+                    <ContextMenu x:Name="PresetsMenu" />
+                </ui:Button.ContextMenu>
+            </ui:Button>
+            <TextBlock
+                x:Name="RemainingText"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                FontSize="12"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+        </Grid>
+    </StackPanel>
+</UserControl>

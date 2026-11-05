@@ -1,0 +1,92 @@
+<UserControl
+    x:Class="ShutdownMate.Controls.AboutView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <UserControl.Resources>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Padding" Value="16,12" />
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="6" />
+        </Style>
+        <Style x:Key="KeyText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,0,16,4" />
+        </Style>
+        <Style x:Key="KeyInfo" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+            <Setter Property="Margin" Value="0,0,0,4" />
+        </Style>
+    </UserControl.Resources>
+    <StackPanel>
+        <TextBlock Style="{StaticResource SectionHeader}" Text="{DynamicResource About_Uygulama}" />
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <TextBlock x:Name="VersionText" FontSize="16" FontWeight="SemiBold" />
+                <TextBlock x:Name="BuildText" Margin="0,2,0,0" Style="{StaticResource Caption}" />
+                <TextBlock Margin="0,6,0,0" Text="{DynamicResource About_GelistirenBerkaySurel}" />
+                <TextBlock Margin="0,8,0,0" Style="{StaticResource Caption}" Text="{DynamicResource About_ZamanlayiciyiKurmadanOnceAci}" />
+                <WrapPanel Margin="0,12,0,0">
+                    <ui:Button x:Name="UpdateButton" Margin="0,0,8,8" Content="{DynamicResource About_GuncellemeleriDenetle}" Icon="{ui:SymbolIcon ArrowSync24}" ToolTip="{DynamicResource About_GithubDakiSurumlerSayfasini}" Click="Releases_Click" />
+                    <ui:Button Margin="0,0,8,8" Content="{DynamicResource About_ProjeSayfasi}" Icon="{ui:SymbolIcon Globe24}" ToolTip="{DynamicResource About_ProjeninGithubSayfasiniTaray}" Click="Project_Click" />
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+
+        <TextBlock Style="{StaticResource SectionHeader}" Text="{DynamicResource About_Gizlilik}" />
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource KeyInfo}" Text="{DynamicResource About_InternetBaglantisiKullanmazH}" />
+                <TextBlock Style="{StaticResource KeyInfo}" Text="{DynamicResource About_AyarlarVeGecmisBu}" />
+                <TextBlock Style="{StaticResource KeyInfo}" Text="{DynamicResource About_GozetimKaydiVarsayilanKapali}" />
+                <TextBlock Style="{StaticResource KeyInfo}" Text="{DynamicResource About_UygulamaninKendiHatalariAyni}" />
+            </StackPanel>
+        </Border>
+
+        <TextBlock Style="{StaticResource SectionHeader}" Text="{DynamicResource About_KlavyeKisayollari}" />
+        <Border Style="{StaticResource Card}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Style="{StaticResource KeyText}" Text="{DynamicResource About_Esc}" />
+                <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource KeyInfo}" Text="{DynamicResource About_GeriSayimYaDa}" />
+                <TextBlock Grid.Row="1" Style="{StaticResource KeyText}" Text="F11" />
+                <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource KeyInfo}" Text="{DynamicResource About_ZamanlayiciCalisirkenTamEkra}" />
+                <TextBlock Grid.Row="2" Style="{StaticResource KeyText}" Text="{DynamicResource About_EscTamEkranKilit}" />
+                <TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource KeyInfo}" Text="{DynamicResource About_TamEkrandanYaDa}" />
+                <TextBlock Grid.Row="3" Style="{StaticResource KeyText}" Text="{DynamicResource About_EnterEscUyarida}" />
+                <TextBlock Grid.Row="3" Grid.Column="1" Style="{StaticResource KeyInfo}" Text="{DynamicResource About_KapanisUyarisindaZamanlayici}" />
+                <TextBlock Grid.Row="4" Style="{StaticResource KeyText}" Text="{DynamicResource About_EUyarida}" />
+                <TextBlock Grid.Row="4" Grid.Column="1" Style="{StaticResource KeyInfo}" Text="{DynamicResource About_KapanisUyarisindaIslemiErtel}" />
+            </Grid>
+        </Border>
+
+        <TextBlock Style="{StaticResource SectionHeader}" Text="{DynamicResource About_Lisanslar}" />
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource KeyInfo}" Text="{DynamicResource About_ArayuzWpfUiLepoco}" />
+                <TextBlock Style="{StaticResource KeyInfo}" Text="{DynamicResource About_DijitalYaziTipiDseg7}" />
+                <TextBlock Style="{StaticResource KeyInfo}" Text="{DynamicResource About_CalismaOrtamiNetMicrosoft}" />
+            </StackPanel>
+        </Border>
+
+        <TextBlock Style="{StaticResource SectionHeader}" Text="{DynamicResource About_Ayarlar}" />
+        <Border Style="{StaticResource Card}">
+            <WrapPanel>
+                <ui:Button Margin="0,0,8,0" Content="{DynamicResource About_AyarKlasorunuAc}" Icon="{ui:SymbolIcon FolderOpen24}" ToolTip="{DynamicResource About_AyarlarinGecmisinVeVarsa}" Click="OpenFolder_Click" />
+                <ui:Button Content="{DynamicResource About_VarsayilanlaraDon}" Icon="{ui:SymbolIcon ArrowReset24}" ToolTip="{DynamicResource About_TumAyarlariVeSon}" Click="Reset_Click" />
+            </WrapPanel>
+        </Border>
+    </StackPanel>
+</UserControl>
