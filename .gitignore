@@ -5,3 +5,16 @@ release/
 *.user
 .vs/
 archive/
+# Sertifika, gizli anahtar ve imzali paketler asla depoya girmez
+*.pfx
+*.p12
+*.cer
+*.crt
+*.pem
+*.key
+*.pvk
+*.snk
+*.msix
+*.msixbundle
+*.appx
+*.appxbundle

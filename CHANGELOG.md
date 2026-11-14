@@ -2,6 +2,39 @@
 
 Biçim: [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/). Sürümleme: anlamsal sürümleme (MAJOR.MINOR.PATCH).
 
+## [2.6.2] - 2026-11-14
+
+2.6.0'dan sonraki ilk yayın (2.6.1 yayınlanmadı). "İşler bitince" kipine çıktı dosyası koşulu, "Belirli saatte" kipine açılış saati ayarı ve bir kod denetiminde bulunan hataların düzeltmeleri.
+
+### Eklendi
+- **Dosya / klasör koşulu ("İşler bitince"):** seçilen dosya ya da klasör büyümeyi ve değişmeyi bırakınca iş bitmiş sayılır. Render çıktısı gibi işlerde işlemci ya da ağ eşiğinden daha kesin bir işarettir. Dosya ya da klasör "Dosya seç" / "Klasör seç" ile seçilir; satırda son değişiklikten bu yana geçen süre ve boyut canlı görünür. Eşik ayarı yoktur, mevcut "sakin kalma süresi" kullanılır. Koşul ana ekran ve tam ekran göstergelerinde, durum satırında ve gözetim kaydında görünür; Kişiselleştirme'den gizlenebilir.
+  - Yol okunamıyorsa (dosya silindi, USB çıkarıldı, ağ sürücüsü koptu) koşul "sakin" sayılmaz, "okunamıyor" görünür: okunamayan ölçüm yüzünden bilgisayar kapanmaz.
+  - "İşlerin başlamasını bekle" açıkken koşul yalnızca dosyada gerçek bir değişiklik görülünce başlamış sayılır.
+  - İki yazma arası uzun süren işlerde (ör. kare kare render) sakin kalma süresi bu aradan uzun seçilmelidir; satırın açıklaması bunu söyler.
+  - Çok büyük klasörlerde ilk 5000 dosya taranır; fazlasında klasörün en yeni yazma zamanına bakılır ve boyut gösterilmez.
+- **"Belirli saat açılışta" ayarı (Ayarlar > Zamanlayıcı):** "Belirli saatte" kipi seçildiğinde ve uygulama açıldığında saat seçicisine hangi saatin geleceği seçilir: "En erken saat" (varsayılan, önceki davranış), "Son kullanılan saat" ya da "Sabit saat" (saat ve dakika girilir). Gelen saat bugün için geçmişteyse ya da en erken kurulabilir saatten önceyse "Yarın" seçilir. "Son seçimleri hatırla" kapalıyken "Son kullanılan saat" en erken saati getirir.
+
+### Düzeltildi
+- **Yönetici olarak çalışan programın veri aktarımı 0 görünüyordu:** ağ koşulu tek bir programa bağlandığında ve o program yönetici olarak çalıştığında aktarım okunamıyor, koşul "sakin" sayılıyordu; indirme sürerken bilgisayar kapanabiliyor ya da zamanlayıcı hiç tetiklenmiyordu. Süreç artık yalnızca sorgulama yetkisiyle açılıyor.
+- **USB çıkarma beklenmedik hata verirse kapanış takılı kalıyordu:** sayaç 00:00'da kalıyor, işlem hiç uygulanmıyordu. Hata artık geçmiş notuna yazılır ve işlem sürer.
+- **Kapanış uyarısı açıldığı anda basılan tuş zamanlayıcıyı iptal ediyordu:** uyarı odağı aldığı için başka pencerede yazı yazan kullanıcının Enter / Esc tuşu iptal, E tuşu erteleme sayılıyordu. Uyarı açıldıktan sonraki ilk saniyede klavye tuşları yok sayılır (fare düğmeleri hemen çalışır); klavye ipucu da o sürede gizlenir.
+- Kapanışta bazen süreç takılı kalıyordu: ölçüm sayaçları artık arka planda kapatılıyor.
+- Zamanlayıcı çalışırken Kişiselleştirme'den gizlenen koşul işaretli kalıyor, sonraki başlatmada görünmeden devreye giriyordu. Zamanlayıcı durunca ana ekran düzeni yenilenir.
+- Üst süre sınırını aşan hızlı süre eklenebiliyor ama ana ekranda düğmesi çıkmıyordu; artık eklenmez, kullanıcı uyarılır.
+- Gözetim kaydı: ekran görüntüsü damgasında program adı yerine iç kod adı yazıyordu.
+- Gözetim kaydı: çalışan zamanlayıcı yeniden kurulduğunda eski kayıt Geçmiş'te görünmüyordu; artık "Yeniden kuruldu" satırına bağlanır.
+- Gözetim kaydı: siyah ekran görüntüsü denetimi rengi olmayan baytı da hesaba katıyordu; kilitli ekranda yedek pencere görüntüsüne geçilmeyebiliyordu.
+- Geçmiş'teki kayıt boyutu Windows'un değil uygulama dilinin ondalık işaretiyle yazılır.
+- Hız metni sınırda "1000 KB/sn" yerine "1,0 MB/sn" yazar.
+- Elle bozulmuş ayar dosyasında gizli öğe listesi boşsa ana ekran ayarları hata veriyordu.
+
+### Değişti
+- Ekran kilidi açıklamalarına "güvenlik kilidi değildir; Ctrl+Alt+Del ve Win+L engellenemez" notu eklendi.
+
+### Test durumu
+- Denendi (Windows 11): otomatik kontroller ve derleme; dosya / klasör koşulu gerçek programla (yazma durunca sakinleşme ve son geri sayım, bitmeden iptal); "Belirli saat açılışta" ayarının üç seçeneği, açık ve koyu temada; hızlı süre uyarısı; kapanış uyarısındaki ilk saniye tuş koruması (zamanlayıcısız deneme penceresiyle); yönetici süreçte aktarım okuması (ayrı denemeyle).
+- Denenmedi: gerçek kapanış / uyku ve gerçek USB çıkarma; yönetici programla uçtan uca zamanlayıcı; dosya koşulunda ağ sürücüsü, çok büyük klasör ve yüksek DPI; gözetim kaydı damgası ve siyah görüntü denetimi gerçek kilitli ekranda; gizlenen koşul düzeltmesi çalışan zamanlayıcıyla (kod okumasıyla doğrulandı); 1366x768 ekran.
+
 ## [2.6.0] - 2026-11-05
 
 ### Değişti

@@ -46,6 +46,7 @@ namespace ShutdownMate.Views
             AppThemeMode oldTheme = _settings.Theme;
             WindowBackdropType oldBackdrop = _settings.Backdrop;
             string oldLanguage = _settings.Language;
+            int oldClockStart = _settings.ClockStartMode, oldFixedHour = _settings.FixedClockHour, oldFixedMinute = _settings.FixedClockMinute;
 
             _settings.Theme = (AppThemeMode)Math.Max(0, PrefTheme.SelectedIndex);
             _settings.Language = PrefLanguage.SelectedIndex == 1 ? "tr" : PrefLanguage.SelectedIndex == 2 ? "en" : "auto";
@@ -82,6 +83,9 @@ namespace ShutdownMate.Views
             _settings.ShowToolTips = PrefShowToolTips.IsChecked == true;
             ToolTipSwitch.Enabled = _settings.ShowToolTips;
             _settings.RememberLastChoices = PrefRemember.IsChecked == true;
+            _settings.ClockStartMode = ReadTag(PrefClockStart, 0);
+            _settings.FixedClockHour = ReadInt(PrefFixedHour, 23);
+            _settings.FixedClockMinute = ReadInt(PrefFixedMinute, 0);
             _settings.WarningSeconds = ReadTag(PrefWarning, 60);
             _settings.WarningSound = PrefWarningSound.IsChecked == true;
             _settings.WarningBringToFront = PrefWarningFront.IsChecked == true;
@@ -121,6 +125,9 @@ namespace ShutdownMate.Views
             SnoozeButton.Content = _settings.SnoozeMinutes + Loc.T("FullscreenWindow_DkErtele");
             UpdateFullscreenOptionPanels();
             SettingsService.Save(_settings);
+            // Seçim değişince (zamanlayıcı çalışmıyorsa) kurulum ekranındaki saat de buna göre güncellenir
+            if (_phase == RunPhase.Idle && (oldClockStart != _settings.ClockStartMode || oldFixedHour != _settings.FixedClockHour || oldFixedMinute != _settings.FixedClockMinute))
+                SetClockToEarliest(DateTime.Now);
             if (oldLanguage != _settings.Language) Dispatcher.BeginInvoke(new Action(OfferLanguageRestart));
         }
 
@@ -178,6 +185,7 @@ namespace ShutdownMate.Views
 
         private void UpdateFullscreenOptionPanels()
         {
+            Motion.SetVisible(PrefFixedClock, PrefClockStart.SelectedIndex == 2, 0, true);
             Motion.SetVisible(FsMetricOptions, PrefFsMetrics.IsChecked == true, 0, true);
             Motion.SetVisible(LockMetricOptions, PrefLockMetrics.IsChecked == true, 0, true);
             int mode = PrefFsBackground.SelectedIndex;
@@ -269,6 +277,12 @@ namespace ShutdownMate.Views
             if (minutes < _settings.GetMinLeadMinutes())
             {
                 ShowInfo(Loc.T("MainWindowPreferences_BuSureGuvenlikSekmesindeki") + TextFormat.Minutes(_settings.GetMinLeadMinutes(), true) + Loc.T("MainWindowPreferences_KisaOlduguIcinAna"));
+                return;
+            }
+
+            if (minutes > _settings.GetMaxDurationHours() * 60)
+            {
+                ShowInfo(Loc.T("MainWindowPreferences_BuSureGuvenlikSekmesindekiEnUzun") + TextFormat.Minutes(_settings.GetMaxDurationHours() * 60, true) + Loc.T("MainWindowPreferences_UzunOlduguIcinEklenmedi"));
                 return;
             }
 

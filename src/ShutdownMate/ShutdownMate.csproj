@@ -12,7 +12,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
 
     <!-- Sürüm: anlamsal sürümleme (MAJOR.MINOR.PATCH). Her yayında CHANGELOG.md ile birlikte güncellenir. -->
-    <Version>2.6.0</Version>
+    <Version>2.6.2</Version>
     <Product>ShutdownMate</Product>
     <AssemblyTitle>ShutdownMate</AssemblyTitle>
     <Authors>Berkay Sürel</Authors>

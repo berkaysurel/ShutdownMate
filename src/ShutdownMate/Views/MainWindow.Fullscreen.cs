@@ -241,6 +241,7 @@ namespace ShutdownMate.Views
             if (_watcher.UseCpu) list.Add(new MetricChipState { Label = _watcher.CpuLabel(), Active = _watcher.CpuActive, Icon = SymbolRegular.DeveloperBoard24 });
             if (_watcher.UseTransfer) list.Add(new MetricChipState { Label = _watcher.TransferLabel(), Active = _watcher.TransferActive, Icon = SymbolRegular.Folder24 });
             if (_watcher.UseGpu) list.Add(new MetricChipState { Label = _watcher.GpuLabel(), Active = _watcher.GpuActive, Icon = SymbolRegular.VideoClip24 });
+            if (_watcher.UseFile) list.Add(new MetricChipState { Label = _watcher.FileLabel(), Active = _watcher.FileActive, Icon = SymbolRegular.Document24 });
             if (_watcher.UseProcess)
                 list.Add(new MetricChipState { Label = (_watcher.ProcessName ?? "") + (_watcher.ProcessRunning ? Loc.T("MainWindowFullscreen_Acik") : Loc.T("WatchRecorder_Kapandi")), Active = _watcher.ProcessRunning, Icon = SymbolRegular.AppGeneric24 });
             return list;

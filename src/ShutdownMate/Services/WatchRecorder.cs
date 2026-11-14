@@ -322,7 +322,7 @@ namespace ShutdownMate.Services
             string when = (s.StampDate ? now.ToString("dd.MM.yyyy") : "") + (s.StampDate && s.StampTime ? "  " : "") + (s.StampTime ? now.ToString("HH:mm:ss") : "");
             if (when.Length > 0) lines.Add(when);
             if (s.StampMode && !string.IsNullOrEmpty(_session.Mode)) lines.Add(_session.Mode);
-            if (s.StampProgram && _program != null) lines.Add(Loc.T("WatchRecorder_Izlenen") + _program);
+            if (s.StampProgram && _program != null) lines.Add(Loc.T("WatchRecorder_Izlenen") + _program.ProcessName);
             if (!string.IsNullOrWhiteSpace(s.StampNote)) lines.Add(s.StampNote.Trim());
             return lines.Count == 0 ? null : lines.ToArray();
         }

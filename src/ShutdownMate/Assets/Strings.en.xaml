@@ -206,7 +206,7 @@
     <sys:String x:Key="Main_Baslat">Start</sys:String>
     <sys:String x:Key="Main_ZamanlayiciyiBaslatir">Starts the timer</sys:String>
     <sys:String x:Key="Main_EkraniKilitle">Lock the screen</sys:String>
-    <sys:String x:Key="Main_ZamanlayiciKurmadanKilitlerB">Locks without setting a timer; the computer does not shut down. The screen stays visible, and clicks and keys are ignored. Leave with Esc or the exit button.</sys:String>
+    <sys:String x:Key="Main_ZamanlayiciKurmadanKilitlerB">Locks without setting a timer; the computer does not shut down. The screen stays visible, and clicks and keys are ignored. Leave with Esc or the exit button. Not a security lock.</sys:String>
     <sys:String x:Key="Main_TamEkranKilidi">Full-screen lock</sys:String>
     <sys:String x:Key="Main_ZamanlayiciKurmadanTamEkran">Locks in full screen without setting a timer; the computer does not shut down. Leave with Esc or the exit button.</sys:String>
     <sys:String x:Key="Main_ZamanlayiciCalisiyor">Timer is running</sys:String>
@@ -367,6 +367,12 @@
     <sys:String x:Key="Main_AcikkenGeriSayimSaat">When on, the countdown is not affected by clock changes; the set time is calculated by the Windows time zone. When off, the time Windows shows is used as is.</sys:String>
     <sys:String x:Key="Main_SonSecimleriHatirla">Remember last choices</sys:String>
     <sys:String x:Key="Main_UygulamaAcildigindaSonKullan">When the app opens, the last used duration and options come back</sys:String>
+    <sys:String x:Key="Main_BelirliSaatAcilista">Clock time at startup</sys:String>
+    <sys:String x:Key="Main_BelirliSaatKipiAcilirkenHangi">Chooses which time comes up when the “At a set time” mode opens. If that time has passed, tomorrow is selected. “Last used time” does not work while Remember last choices is off; the earliest time comes up instead.</sys:String>
+    <sys:String x:Key="Main_EnErkenSaat">Earliest time</sys:String>
+    <sys:String x:Key="Main_SonKullanilanSaat">Last used time</sys:String>
+    <sys:String x:Key="Main_SabitSaat">Fixed time</sys:String>
+    <sys:String x:Key="Main_AcilistaGelecekSaatSecenegi">Earliest time: the soonest allowed from now. Last used time: the time you started last. Fixed time: the time you pick beside it.</sys:String>
     <sys:String x:Key="Main_UyariZamani">Warning time</sys:String>
     <sys:String x:Key="Main_SayacKirmiziyaDonerIptal">The counter turns red, the last chance to cancel</sys:String>
     <sys:String x:Key="Main_30SaniyeKala">30 seconds left</sys:String>
@@ -391,7 +397,7 @@
     <sys:String x:Key="Main_EkraninUstu">Top of the screen</sys:String>
     <sys:String x:Key="Main_BaslatincaEkraniKilitle">Lock the screen when started</sys:String>
     <sys:String x:Key="Main_BaslatincaTamEkranDa">If full screen is also on at start, full screen takes priority.</sys:String>
-    <sys:String x:Key="Main_EkranGorunurKalirTiklamalar2">The screen stays visible; clicks and keys are ignored. While locked the main window is hidden and returns when you leave. Win, Alt+Tab and other monitors are not blocked.</sys:String>
+    <sys:String x:Key="Main_EkranGorunurKalirTiklamalar2">The screen stays visible; clicks and keys are ignored. While locked the main window is hidden and returns when you leave. Win, Alt+Tab and other monitors are not blocked. This is not a security lock; Ctrl+Alt+Del and Win+L cannot be blocked.</sys:String>
     <sys:String x:Key="Main_HazirMesajlar">Preset messages</sys:String>
     <sys:String x:Key="Main_Gorunum">Appearance</sys:String>
     <sys:String x:Key="Main_Tema">Theme</sys:String>
@@ -612,6 +618,8 @@
     <sys:String x:Key="MainWindowPreferences_LutfenEnAz1">Please enter a duration of at least 1 minute.</sys:String>
     <sys:String x:Key="MainWindowPreferences_BuSureGuvenlikSekmesindeki">This duration is shorter than the shortest duration in the Security tab (</sys:String>
     <sys:String x:Key="MainWindowPreferences_KisaOlduguIcinAna">), so it does not appear on the main screen.</sys:String>
+    <sys:String x:Key="MainWindowPreferences_BuSureGuvenlikSekmesindekiEnUzun">This duration is longer than the longest duration in the Security tab (</sys:String>
+    <sys:String x:Key="MainWindowPreferences_UzunOlduguIcinEklenmedi">), so it was not added.</sys:String>
     <sys:String x:Key="MainWindowPreferences_ZatenListede">⎵is already in the list.</sys:String>
     <sys:String x:Key="MainWindowPreferences_Son">Last:⎵</sys:String>
     <sys:String x:Key="MainWindowPreferences_VarsayilanlaraDonulsunMu">Reset to defaults?</sys:String>
@@ -705,4 +713,22 @@
     <sys:String x:Key="HistoryView_Sorun1">⎵issue</sys:String>
     <sys:String x:Key="HistoryView_Usage1">{0} watch recording · {1} MB</sys:String>
     <sys:String x:Key="LockMessageEditor_KarakterKaldi1">⎵character left</sys:String>
+    <sys:String x:Key="Main_DosyaKlasor">File / folder</sys:String>
+    <sys:String x:Key="Main_SectiginizDosyaYaKlasor">The job counts as finished when the file or folder you choose (including subfolders) stops growing and changing. A more reliable signal for render output than a CPU threshold. If the path cannot be read (deleted, USB removed, network lost) the job does not count as finished.</sys:String>
+    <sys:String x:Key="Main_CiktiDosyasiYaDaKlasoru">The job ends when the output file or folder stops changing. If writes are far apart (e.g. frame-by-frame render), set the calm time longer than that gap.</sys:String>
+    <sys:String x:Key="Main_DosyaYaDaKlasorYolu">File or folder path</sys:String>
+    <sys:String x:Key="Main_IzlenecekDosyaninYaDaKlasor">Full path of the file or folder to watch. Type it or use the buttons below.</sys:String>
+    <sys:String x:Key="Main_DosyaSec">Choose file</sys:String>
+    <sys:String x:Key="Main_IzlenecekDosyayiSecer">Lets you choose the file to watch.</sys:String>
+    <sys:String x:Key="Main_KlasorSec">Choose folder</sys:String>
+    <sys:String x:Key="Main_IzlenecekKlasoruSecer">Lets you choose the folder to watch (subfolders included).</sys:String>
+    <sys:String x:Key="MainWindowSetup_IzlenecekDosyayiSecin">Choose the file to watch</sys:String>
+    <sys:String x:Key="MainWindowSetup_IzlenecekKlasoruSecin">Choose the folder to watch</sys:String>
+    <sys:String x:Key="MainWindowSetup_DosyaKlasor">file / folder</sys:String>
+    <sys:String x:Key="MainWindowHome_DosyaKlasor">File / folder</sys:String>
+    <sys:String x:Key="MainWindowRun_LutfenIzlenecekDosyaYaKlasor">Please choose the file or folder to watch.</sys:String>
+    <sys:String x:Key="MainWindowRun_SecilenDosyaYaKlasorBulunamadi">The chosen file or folder was not found. Check the path.</sys:String>
+    <sys:String x:Key="ActivityWatcher_Dosya">File⎵</sys:String>
+    <sys:String x:Key="ActivityWatcher_OnceDegisti">last change {0} ago</sys:String>
+    <sys:String x:Key="ActivityWatcher_Degismedi">no change</sys:String>
 </ResourceDictionary>

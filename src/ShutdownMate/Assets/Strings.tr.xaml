@@ -206,7 +206,7 @@
     <sys:String x:Key="Main_Baslat">Başlat</sys:String>
     <sys:String x:Key="Main_ZamanlayiciyiBaslatir">Zamanlayıcıyı başlatır</sys:String>
     <sys:String x:Key="Main_EkraniKilitle">Ekranı kilitle</sys:String>
-    <sys:String x:Key="Main_ZamanlayiciKurmadanKilitlerB">Zamanlayıcı kurmadan kilitler; bilgisayar kapanmaz. Ekran görünür kalır, tıklamalar ve tuşlar yok sayılır. Esc ya da çıkış düğmesiyle çıkılır.</sys:String>
+    <sys:String x:Key="Main_ZamanlayiciKurmadanKilitlerB">Zamanlayıcı kurmadan kilitler; bilgisayar kapanmaz. Ekran görünür kalır, tıklamalar ve tuşlar yok sayılır. Esc ya da çıkış düğmesiyle çıkılır. Güvenlik kilidi değildir.</sys:String>
     <sys:String x:Key="Main_TamEkranKilidi">Tam ekran kilidi</sys:String>
     <sys:String x:Key="Main_ZamanlayiciKurmadanTamEkran">Zamanlayıcı kurmadan tam ekran kilitler; bilgisayar kapanmaz. Esc ya da çıkış düğmesiyle çıkılır.</sys:String>
     <sys:String x:Key="Main_ZamanlayiciCalisiyor">Zamanlayıcı çalışıyor</sys:String>
@@ -367,6 +367,12 @@
     <sys:String x:Key="Main_AcikkenGeriSayimSaat">Açıkken geri sayım saat değişiminden etkilenmez; belirli saat Windows saat dilimine göre hesaplanır. Kapalıyken Windows'un gösterdiği saat olduğu gibi kullanılır.</sys:String>
     <sys:String x:Key="Main_SonSecimleriHatirla">Son seçimleri hatırla</sys:String>
     <sys:String x:Key="Main_UygulamaAcildigindaSonKullan">Uygulama açıldığında son kullanılan süre ve seçenekler gelir</sys:String>
+    <sys:String x:Key="Main_BelirliSaatAcilista">Belirli saat açılışta</sys:String>
+    <sys:String x:Key="Main_BelirliSaatKipiAcilirkenHangi">“Belirli saatte” kipi açılırken hangi saatin geleceğini seçer. Saat geçmişteyse yarın seçilir. “Son kullanılan saat”, Son seçimleri hatırla kapalıyken çalışmaz; en erken saat gelir.</sys:String>
+    <sys:String x:Key="Main_EnErkenSaat">En erken saat</sys:String>
+    <sys:String x:Key="Main_SonKullanilanSaat">Son kullanılan saat</sys:String>
+    <sys:String x:Key="Main_SabitSaat">Sabit saat</sys:String>
+    <sys:String x:Key="Main_AcilistaGelecekSaatSecenegi">En erken saat: şimdiden en kısa süre sonrası. Son kullanılan saat: en son başlattığın saat. Sabit saat: yanda seçtiğin saat.</sys:String>
     <sys:String x:Key="Main_UyariZamani">Uyarı zamanı</sys:String>
     <sys:String x:Key="Main_SayacKirmiziyaDonerIptal">Sayaç kırmızıya döner, iptal için son fırsat</sys:String>
     <sys:String x:Key="Main_30SaniyeKala">30 saniye kala</sys:String>
@@ -391,7 +397,7 @@
     <sys:String x:Key="Main_EkraninUstu">Ekranın üstü</sys:String>
     <sys:String x:Key="Main_BaslatincaEkraniKilitle">Başlatınca ekranı kilitle</sys:String>
     <sys:String x:Key="Main_BaslatincaTamEkranDa">Başlatınca tam ekran da açıksa tam ekran önceliklidir.</sys:String>
-    <sys:String x:Key="Main_EkranGorunurKalirTiklamalar2">Ekran görünür kalır; tıklamalar ve tuşlar yok sayılır. Kilit açıkken ana pencere gizlenir, çıkınca geri gelir. Win, Alt+Tab ve diğer monitörler engellenmez.</sys:String>
+    <sys:String x:Key="Main_EkranGorunurKalirTiklamalar2">Ekran görünür kalır; tıklamalar ve tuşlar yok sayılır. Kilit açıkken ana pencere gizlenir, çıkınca geri gelir. Win, Alt+Tab ve diğer monitörler engellenmez. Bu bir güvenlik kilidi değildir; Ctrl+Alt+Del ve Win+L engellenemez.</sys:String>
     <sys:String x:Key="Main_HazirMesajlar">Hazır mesajlar</sys:String>
     <sys:String x:Key="Main_Gorunum">Görünüm</sys:String>
     <sys:String x:Key="Main_Tema">Tema</sys:String>
@@ -612,6 +618,8 @@
     <sys:String x:Key="MainWindowPreferences_LutfenEnAz1">Lütfen en az 1 dakikalık bir süre girin.</sys:String>
     <sys:String x:Key="MainWindowPreferences_BuSureGuvenlikSekmesindeki">Bu süre, Güvenlik sekmesindeki en kısa süreden (</sys:String>
     <sys:String x:Key="MainWindowPreferences_KisaOlduguIcinAna">) kısa olduğu için ana ekranda görünmez.</sys:String>
+    <sys:String x:Key="MainWindowPreferences_BuSureGuvenlikSekmesindekiEnUzun">Bu süre, Güvenlik sekmesindeki en uzun süreden (</sys:String>
+    <sys:String x:Key="MainWindowPreferences_UzunOlduguIcinEklenmedi">) uzun olduğu için eklenmedi.</sys:String>
     <sys:String x:Key="MainWindowPreferences_ZatenListede">⎵zaten listede.</sys:String>
     <sys:String x:Key="MainWindowPreferences_Son">Son:⎵</sys:String>
     <sys:String x:Key="MainWindowPreferences_VarsayilanlaraDonulsunMu">Varsayılanlara dönülsün mü?</sys:String>
@@ -705,4 +713,22 @@
     <sys:String x:Key="HistoryView_Sorun1">⎵sorun</sys:String>
     <sys:String x:Key="HistoryView_Usage1">{0} gözetim kaydı · {1} MB</sys:String>
     <sys:String x:Key="LockMessageEditor_KarakterKaldi1">⎵karakter kaldı</sys:String>
+    <sys:String x:Key="Main_DosyaKlasor">Dosya / klasör</sys:String>
+    <sys:String x:Key="Main_SectiginizDosyaYaKlasor">Seçtiğiniz dosya ya da klasör (alt klasörleri dahil) büyümeyi ve değişmeyi bıraktığında iş bitmiş sayılır. Render çıktısı için işlemci eşiğinden daha kesin bir işarettir. Yol okunamazsa (silindi, USB çıktı, ağ koptu) iş bitmiş sayılmaz.</sys:String>
+    <sys:String x:Key="Main_CiktiDosyasiYaDaKlasoru">Çıktı dosyası ya da klasörü değişmeyi bırakınca iş biter. İki yazma arası uzunsa (ör. kare kare render) sakin kalma süresini ondan uzun seçin.</sys:String>
+    <sys:String x:Key="Main_DosyaYaDaKlasorYolu">Dosya ya da klasör yolu</sys:String>
+    <sys:String x:Key="Main_IzlenecekDosyaninYaDaKlasor">İzlenecek dosyanın ya da klasörün tam yolu. Elle yazabilir ya da yandaki düğmelerle seçebilirsiniz.</sys:String>
+    <sys:String x:Key="Main_DosyaSec">Dosya seç</sys:String>
+    <sys:String x:Key="Main_IzlenecekDosyayiSecer">İzlenecek dosyayı seçmenizi sağlar.</sys:String>
+    <sys:String x:Key="Main_KlasorSec">Klasör seç</sys:String>
+    <sys:String x:Key="Main_IzlenecekKlasoruSecer">İzlenecek klasörü seçmenizi sağlar (alt klasörler dahil).</sys:String>
+    <sys:String x:Key="MainWindowSetup_IzlenecekDosyayiSecin">İzlenecek dosyayı seçin</sys:String>
+    <sys:String x:Key="MainWindowSetup_IzlenecekKlasoruSecin">İzlenecek klasörü seçin</sys:String>
+    <sys:String x:Key="MainWindowSetup_DosyaKlasor">dosya / klasör</sys:String>
+    <sys:String x:Key="MainWindowHome_DosyaKlasor">Dosya / klasör</sys:String>
+    <sys:String x:Key="MainWindowRun_LutfenIzlenecekDosyaYaKlasor">Lütfen izlenecek dosya ya da klasörü seçin.</sys:String>
+    <sys:String x:Key="MainWindowRun_SecilenDosyaYaKlasorBulunamadi">Seçilen dosya ya da klasör bulunamadı. Yolu kontrol edin.</sys:String>
+    <sys:String x:Key="ActivityWatcher_Dosya">Dosya⎵</sys:String>
+    <sys:String x:Key="ActivityWatcher_OnceDegisti">son değişiklik {0} önce</sys:String>
+    <sys:String x:Key="ActivityWatcher_Degismedi">değişmedi</sys:String>
 </ResourceDictionary>

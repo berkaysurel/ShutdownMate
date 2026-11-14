@@ -112,6 +112,7 @@ namespace ShutdownMate.Views
                 if (UseCpuCheck.IsChecked == true) n++;
                 if (UseGpuCheck.IsChecked == true) n++;
                 if (UseTransferCheck.IsChecked == true) n++;
+                if (UseFileCheck.IsChecked == true) n++;
                 if (UseProcessCheck.IsChecked == true) n++;
                 return n;
             }

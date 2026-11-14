@@ -270,6 +270,24 @@
                                     </StackPanel>
                                 </Border>
 
+                                <!-- Dosya / klasör -->
+                                <Border x:Name="CondFileCard" Style="{StaticResource ConditionCard}">
+                                    <StackPanel>
+                                        <Grid>
+                                            <CheckBox x:Name="UseFileCheck" ToolTip="{DynamicResource Main_SectiginizDosyaYaKlasor}" Content="{DynamicResource Main_DosyaKlasor}" Checked="Condition_Changed" Unchecked="Condition_Changed" />
+                                            <TextBlock x:Name="FileLiveText" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                        </Grid>
+                                        <StackPanel x:Name="FileOptions" Margin="28,6,0,0">
+                                            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{DynamicResource Main_CiktiDosyasiYaDaKlasoru}" />
+                                            <ui:TextBox x:Name="FilePathBox" Margin="0,6,0,0" PlaceholderText="{DynamicResource Main_DosyaYaDaKlasorYolu}" ToolTip="{DynamicResource Main_IzlenecekDosyaninYaDaKlasor}" TextChanged="FilePath_Changed" />
+                                            <StackPanel Margin="0,6,0,0" Orientation="Horizontal">
+                                                <ui:Button Icon="{ui:SymbolIcon Document24}" Content="{DynamicResource Main_DosyaSec}" ToolTip="{DynamicResource Main_IzlenecekDosyayiSecer}" Click="PickFile_Click" />
+                                                <ui:Button Margin="6,0,0,0" Icon="{ui:SymbolIcon Folder24}" Content="{DynamicResource Main_KlasorSec}" ToolTip="{DynamicResource Main_IzlenecekKlasoruSecer}" Click="PickFolder_Click" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+
                                 <!-- Program -->
                                 <Border x:Name="CondProcessCard" Style="{StaticResource ConditionCard}">
                                     <StackPanel>
@@ -510,6 +528,12 @@
                         <StackPanel Orientation="Horizontal">
                             <ui:SymbolIcon x:Name="ChipTransferIcon" Symbol="Folder24" FontSize="14" />
                             <TextBlock x:Name="ChipTransferText" Margin="6,0,0,0" FontSize="12" />
+                        </StackPanel>
+                    </Border>
+                    <Border x:Name="ChipFile" Style="{StaticResource MetricChip}">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon x:Name="ChipFileIcon" Symbol="Document24" FontSize="14" />
+                            <TextBlock x:Name="ChipFileText" Margin="6,0,0,0" FontSize="12" />
                         </StackPanel>
                     </Border>
                     <Border x:Name="ChipProcess" Style="{StaticResource MetricChip}">
@@ -983,6 +1007,24 @@
                             </StackPanel>
                         </ui:CardControl.Header>
                         <ui:ToggleSwitch x:Name="PrefRemember" Checked="Preference_Changed" Unchecked="Preference_Changed" />
+                    </ui:CardControl>
+                    <ui:CardControl Margin="0,4,0,0" Icon="{ui:SymbolIcon Clock24}">
+                        <ui:CardControl.Header>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource Main_BelirliSaatAcilista}" />
+                                <TextBlock Style="{StaticResource Caption}" Text="{DynamicResource Main_BelirliSaatKipiAcilirkenHangi}" />
+                                <StackPanel x:Name="PrefFixedClock" Margin="0,8,0,0" Orientation="Horizontal">
+                                    <ui:NumberBox x:Name="PrefFixedHour" Width="130" ToolTip="{DynamicResource Main_FareTekerlegiOkTuslari}" Minimum="0" Maximum="23" MaxDecimalPlaces="0" SmallChange="1" ClearButtonEnabled="False" ValueChanged="Preference_Changed" />
+                                    <TextBlock Margin="8,0" VerticalAlignment="Center" Text=":" />
+                                    <ui:NumberBox x:Name="PrefFixedMinute" Width="130" ToolTip="{DynamicResource Main_FareTekerlegiOkTuslari}" Minimum="0" Maximum="59" MaxDecimalPlaces="0" SmallChange="5" ClearButtonEnabled="False" ValueChanged="Preference_Changed" />
+                                </StackPanel>
+                            </StackPanel>
+                        </ui:CardControl.Header>
+                        <ComboBox x:Name="PrefClockStart" MinWidth="170" VerticalAlignment="Center" ToolTip="{DynamicResource Main_AcilistaGelecekSaatSecenegi}" SelectionChanged="PreferenceCombo_Changed">
+                            <ComboBoxItem Content="{DynamicResource Main_EnErkenSaat}" Tag="0" />
+                            <ComboBoxItem Content="{DynamicResource Main_SonKullanilanSaat}" Tag="1" />
+                            <ComboBoxItem Content="{DynamicResource Main_SabitSaat}" Tag="2" />
+                        </ComboBox>
                     </ui:CardControl>
 
                 </StackPanel>

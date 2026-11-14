@@ -45,6 +45,8 @@ namespace ShutdownMate.Views
             GpuThreshold.Value = _settings.GpuThresholdPercent;
             UseTransferCheck.IsChecked = _settings.UseTransfer && _metrics.Transfer.IsAvailable;
             TransferThreshold.Value = _settings.TransferThresholdMBps;
+            UseFileCheck.IsChecked = _settings.UseFile;
+            FilePathBox.Text = _settings.FilePath ?? "";
             UseProcessCheck.IsChecked = false; // program seçimi her seferinde yeniden yapılır
             CalmCheck.IsChecked = _settings.CalmEnabled;
             CalmMinutes.Value = _settings.CalmMinutes;
@@ -76,6 +78,8 @@ namespace ShutdownMate.Views
             _settings.UseTransfer = UseTransferCheck.IsChecked == true;
             _settings.TransferThresholdMBps = ReadInt(TransferThreshold, 5);
             _settings.TransferSource = SelectedProgramName(TransferSourceCombo) ?? "";
+            _settings.UseFile = UseFileCheck.IsChecked == true;
+            _settings.FilePath = FilePathBox.Text.Trim();
             _settings.UseProcess = UseProcessCheck.IsChecked == true;
             _settings.NetworkProcessName = SelectedProgramName(NetworkProgramCombo) ?? "";
             _settings.CpuProcessName = SelectedProgramName(CpuProgramCombo) ?? "";
@@ -134,6 +138,10 @@ namespace ShutdownMate.Views
             PrefFsUpload.IsChecked = _settings.FullscreenMetricUpload;
             PrefFsGraph.IsChecked = _settings.FullscreenMetricGraph;
             PrefFsTransfer.IsChecked = _settings.FullscreenMetricTransfer;
+            // Sabit saat seçicileri, seçim yüklendikten sonra gösterilir
+            SelectByTag(PrefClockStart, _settings.ClockStartMode);
+            PrefFixedHour.Value = _settings.FixedClockHour;
+            PrefFixedMinute.Value = _settings.FixedClockMinute;
             UpdateFullscreenOptionPanels();
 
             BuildQuickChips();

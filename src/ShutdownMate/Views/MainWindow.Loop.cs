@@ -82,6 +82,8 @@ namespace ShutdownMate.Views
             _sampling = true;
             ActivityWatcher watcher = _watcher;
             WatchRecorder recorder = _recorder;
+            // Ayar panelindeki canlı durum için seçili yol (arayüz iş parçacığında yalnızca metin okunur)
+            string previewPath = ActivityPanel.Visibility == Visibility.Visible && UseFileCheck.IsChecked == true ? FilePathBox.Text.Trim() : "";
             await Task.Run(() =>
             {
                 try
@@ -89,6 +91,7 @@ namespace ShutdownMate.Views
                     _metrics.Sample();
                     if (watcher != null) watcher.SamplePrograms(_metrics);
                     if (recorder != null) recorder.Sample(_metrics);
+                    SampleFilePreview(previewPath);
                 }
                 catch
                 {
@@ -99,6 +102,17 @@ namespace ShutdownMate.Views
             UpdateLiveTexts();
         }
 
+        private FileActivityMonitor _filePreview;
+
+        /// <summary>Panel açıkken seçili yolun canlı durumu için ayrı bir ölçüm (arka planda).</summary>
+        private void SampleFilePreview(string path)
+        {
+            FileActivityMonitor monitor = _filePreview;
+            if (path.Length == 0) { _filePreview = null; return; }
+            if (monitor == null || monitor.Path != path) _filePreview = monitor = new FileActivityMonitor(path);
+            monitor.Sample(DateTime.UtcNow);
+        }
+
         private void UpdateLiveTexts()
         {
             if (ActivityPanel.Visibility != Visibility.Visible) return;
@@ -106,6 +120,8 @@ namespace ShutdownMate.Views
             CpuLiveText.Text = Loc.T("MainWindowLoop_SuAn") + TextFormat.Percent(_metrics.Cpu);
             string drive = TransferMonitor.DriveOf(SelectedProgramName(TransferSourceCombo));
             TransferLiveText.Text = Loc.T("MainWindowLoop_SuAn") + TextFormat.Speed(drive != null ? _metrics.Transfer.RateOf(drive) : _metrics.Transfer.MaxRate());
+            FileActivityMonitor preview = _filePreview;
+            FileLiveText.Text = UseFileCheck.IsChecked == true && preview != null && preview.Path == FilePathBox.Text.Trim() ? ActivityWatcher.FileStatus(preview) : "";
             GpuLiveText.Text = _metrics.GpuAvailable ? Loc.T("MainWindowLoop_SuAn") + TextFormat.Percent(_metrics.Gpu) : Loc.T("MainWindowLoop_Okunamiyor");
         }
 
@@ -116,6 +132,7 @@ namespace ShutdownMate.Views
             UpdateChip(ChipCpu, ChipCpuIcon, ChipCpuText, _watcher.UseCpu, _watcher.CpuActive, _watcher.CpuLabel());
             UpdateChip(ChipTransfer, ChipTransferIcon, ChipTransferText, _watcher.UseTransfer, _watcher.TransferActive, _watcher.TransferLabel());
             UpdateChip(ChipGpu, ChipGpuIcon, ChipGpuText, _watcher.UseGpu, _watcher.GpuActive, _watcher.GpuLabel());
+            UpdateChip(ChipFile, ChipFileIcon, ChipFileText, _watcher.UseFile, _watcher.FileActive, _watcher.UseFile ? _watcher.FileLabel() : "");
             UpdateChip(ChipProcess, ChipProcessIcon, ChipProcessText, _watcher.UseProcess, _watcher.ProcessRunning,
                 (_watcher.ProcessName ?? "") + (_watcher.ProcessRunning ? Loc.T("MainWindowFullscreen_Acik") : Loc.T("WatchRecorder_Kapandi")));
         }

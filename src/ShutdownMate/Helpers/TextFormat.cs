@@ -52,8 +52,18 @@ namespace ShutdownMate.Helpers
         {
             if (bytesPerSecond < 0) return "–";
             double kb = bytesPerSecond / 1024.0;
-            if (kb < 1000) return kb.ToString(kb < 10 ? "0.0" : "0", Loc.Culture) + Loc.T("TextFormat_KbSn");
+            if (kb < 999.5) return kb.ToString(kb < 10 ? "0.0" : "0", Loc.Culture) + Loc.T("TextFormat_KbSn");
             return (kb / 1024.0).ToString("0.0", Loc.Culture) + Loc.T("TextFormat_MbSn");
+        }
+
+        /// <summary>Bayt sayısını "850 KB", "1,2 GB" biçimine çevirir.</summary>
+        public static string Size(long bytes)
+        {
+            double v = Math.Max(0, bytes) / 1024.0;
+            string[] units = { "KB", "MB", "GB", "TB" };
+            int i = 0;
+            while (v >= 1000 && i < units.Length - 1) { v /= 1024.0; i++; }
+            return v.ToString(v < 10 ? "0.0" : "0", Loc.Culture) + " " + units[i];
         }
 
         public static string Percent(double value)

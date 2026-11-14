@@ -30,6 +30,25 @@ namespace ShutdownMate.Models
         public int DurationMinutes { get; set; } = 30;
         public int ClockHour { get; set; } = 23;
         public int ClockMinute { get; set; } = 0;
+        /// <summary>"Belirli saatte" kipi açılırken gelecek saat: 0 en erken saat (varsayılan), 1 son kullanılan, 2 sabit saat.</summary>
+        public int ClockStartMode { get; set; } = 0;
+        public int FixedClockHour { get; set; } = 23;
+        public int FixedClockMinute { get; set; } = 0;
+
+        /// <summary>
+        /// Seçime göre açılış saati; null ise en erken saat kullanılır. Saat bugün için geçmişteyse ya da en erkenden önceyse yarına atılır.
+        /// "Son kullanılan", Son seçimleri hatırla kapalıyken kaydedilmediği için en erken saate düşer.
+        /// </summary>
+        public System.DateTime? ClockStartTime(System.DateTime now, System.DateTime earliest)
+        {
+            int hour, minute;
+            if (ClockStartMode == 2) { hour = FixedClockHour; minute = FixedClockMinute; }
+            else if (ClockStartMode == 1 && RememberLastChoices) { hour = ClockHour; minute = ClockMinute; }
+            else return null;
+            System.DateTime t = now.Date.AddHours(hour).AddMinutes(minute);
+            if (t < earliest) t = t.AddDays(1);
+            return t < earliest ? (System.DateTime?)null : t;
+        }
 
         // "İşler bitince" koşulları
         public bool UseNetwork { get; set; } = true;
@@ -40,6 +59,9 @@ namespace ShutdownMate.Models
         public bool UseGpu { get; set; } = false;
         public int GpuThresholdPercent { get; set; } = 15;
         public bool UseTransfer { get; set; } = false;
+        /// <summary>"Dosya / klasör" koşulu: seçilen yol değişmeyi bırakınca iş biter.</summary>
+        public bool UseFile { get; set; } = false;
+        public string FilePath { get; set; } = "";
         public int TransferThresholdMBps { get; set; } = 5;
 
         /// <summary>Aktarım kaynağı: boş = otomatik (aktarım yapan sürücüler), drive:D: = tek sürücü.</summary>
@@ -286,6 +308,12 @@ namespace ShutdownMate.Models
             LockMessagePresets = CleanLockMessagePresets(LockMessagePresets);
             MinLeadMinutes = GetMinLeadMinutes();
             MaxDurationHours = GetMaxDurationHours();
+            ClockHour = System.Math.Clamp(ClockHour, 0, 23);
+            ClockMinute = System.Math.Clamp(ClockMinute, 0, 59);
+            if (ClockStartMode < 0 || ClockStartMode > 2) ClockStartMode = 0;
+            FixedClockHour = System.Math.Clamp(FixedClockHour, 0, 23);
+            FixedClockMinute = System.Math.Clamp(FixedClockMinute, 0, 59);
+            if (HiddenHomeItems == null) HiddenHomeItems = new List<string>();
             FullscreenDisplaySize = System.Math.Clamp(FullscreenDisplaySize, 1, 3);
             LockTimerMode = System.Math.Clamp(LockTimerMode, 0, 2);
             FullscreenCardStyle = System.Math.Clamp(FullscreenCardStyle, 0, 2);
@@ -299,6 +327,7 @@ namespace ShutdownMate.Models
             if (!System.Enum.IsDefined(LastMode)) LastMode = TriggerMode.Duration;
             if (!System.Enum.IsDefined(NetworkDirection)) NetworkDirection = NetworkDirection.Both;
             TransferThresholdMBps = System.Math.Clamp(TransferThresholdMBps, 1, 500);
+            if (FilePath == null) FilePath = "";
             // Yalnızca sürücüler: boş (otomatik) ya da drive:X:; eski nic:/proc: kayıtları otomatiğe döner
             if (TransferSource == null || !TransferSource.StartsWith("drive:")) TransferSource = "";
             if (!System.Enum.IsDefined(Theme)) Theme = AppThemeMode.System;
@@ -353,6 +382,8 @@ namespace ShutdownMate.Models
             UseGpu = d.UseGpu;
             GpuThresholdPercent = d.GpuThresholdPercent;
             UseTransfer = d.UseTransfer;
+            UseFile = d.UseFile;
+            FilePath = d.FilePath;
             TransferThresholdMBps = d.TransferThresholdMBps;
             TransferSource = d.TransferSource;
             UseProcess = d.UseProcess;

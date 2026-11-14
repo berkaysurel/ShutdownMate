@@ -24,6 +24,9 @@ namespace ShutdownMate.Services
         public double TransferThresholdBps;
         /// <summary>Aktarım kaynağı: "" otomatik, "drive:D:" tek sürücü.</summary>
         public string TransferSource = "";
+        /// <summary>Dosya / klasör koşulu: seçilen yol büyümeyi/değişmeyi bırakınca sakin.</summary>
+        public bool UseFile { get { return _file != null; } }
+        private FileActivityMonitor _file;
         public Process WatchedProcess;
         public string ProcessName;
         public TimeSpan CalmDuration;
@@ -44,6 +47,7 @@ namespace ShutdownMate.Services
         public bool GpuActive { get; private set; }
         public bool ProcessRunning { get; private set; }
         public bool TransferActive { get; private set; }
+        public bool FileActive { get; private set; }
 
         /// <summary>Son değerlendirmedeki ölçümler (program seçildiyse o programa ait).</summary>
         public double NetworkValue { get; private set; } = -1;
@@ -55,10 +59,10 @@ namespace ShutdownMate.Services
         public string CpuProgramName { get { return _cpuProgram != null ? _cpuProgram.ProcessName : null; } }
         public string GpuProgramName { get { return _gpuProgram != null ? _gpuProgram.ProcessName : null; } }
 
-        public bool AnyActive { get { return NetworkActive || CpuActive || GpuActive || TransferActive || ProcessRunning; } }
+        public bool AnyActive { get { return NetworkActive || CpuActive || GpuActive || TransferActive || FileActive || ProcessRunning; } }
 
         /// <summary>Yeniden başlayabilen bir iş (ağ, işlemci, ekran kartı) etkin mi.</summary>
-        public bool ResumableActive { get { return NetworkActive || CpuActive || GpuActive || TransferActive; } }
+        public bool ResumableActive { get { return NetworkActive || CpuActive || GpuActive || TransferActive || FileActive; } }
 
         private readonly TransferTracker _transfer = new TransferTracker();
         private long _transferSampleId = -1;
@@ -69,6 +73,12 @@ namespace ShutdownMate.Services
         public void SetNetworkProgram(string processName) { _networkProgram = GetProgram(processName); }
         public void SetCpuProgram(string processName) { _cpuProgram = GetProgram(processName); }
         public void SetGpuProgram(string processName) { _gpuProgram = GetProgram(processName); }
+
+        /// <summary>Dosya / klasör koşulunu açar. Boş yol: koşul yok.</summary>
+        public void SetFile(string path)
+        {
+            _file = string.IsNullOrWhiteSpace(path) ? null : new FileActivityMonitor(path);
+        }
 
         /// <summary>Aktarım kaynağını ayarlar: "drive:D:" tek sürücü, boş = otomatik (aktarım yapan sürücüler).</summary>
         public void SetTransferSource(string key)
@@ -93,6 +103,7 @@ namespace ShutdownMate.Services
         public void SamplePrograms(SystemMetrics metrics)
         {
             foreach (var monitor in _programs.Values) monitor.Sample(metrics.GpuMonitor);
+            if (_file != null) _file.Sample(DateTime.UtcNow);
         }
 
         public void Evaluate(DateTime now, SystemMetrics metrics)
@@ -119,9 +130,17 @@ namespace ShutdownMate.Services
             catch { exited = true; }
             ProcessRunning = UseProcess && !exited;
 
-            if (!WaitForStart || AnyActive) Armed = true;
+            // Dosya: okunamayan yol da "sürüyor" sayılır (güvenli hata); ilk ölçüm gelene kadar sakin sayılmaz
+            DateTime utc = DateTime.UtcNow;
+            FileActive = _file != null && _file.IsActive(utc);
+            bool filePending = _file != null && _file.IsPending;
+
+            // "İşlerin başlamasını bekle": dosyada ilk gerçek değişiklik görülünce başlamış sayılır
+            // Okunamayan dosya yolu yalnızca sakin saymayı engeller; başlamış saymaz (aksi halde iş hiç başlamadan biter)
+            bool started = NetworkActive || CpuActive || GpuActive || TransferActive || ProcessRunning || (_file != null && _file.EverChanged);
+            if (!WaitForStart || started) Armed = true;
             if (!Armed) { _calmSince = null; return; }
-            _calmSince = AnyActive ? (DateTime?)null : (_calmSince ?? now);
+            _calmSince = AnyActive || filePending ? (DateTime?)null : (_calmSince ?? now);
         }
 
         public TimeSpan Calm(DateTime now)
@@ -152,6 +171,34 @@ namespace ShutdownMate.Services
             return Loc.T("ActivityWatcher_Aktarim2") + string.Join(", ", _transfer.Tracked) + ") " + TextFormat.Speed(TransferValue);
         }
 
+        /// <summary>"Dosya render.mp4 · son değişiklik 02:10 önce · 1,2 GB".</summary>
+        public string FileLabel()
+        {
+            return Loc.T("ActivityWatcher_Dosya") + FileName + " · " + FileStatus(_file);
+        }
+
+        /// <summary>İzlenen dosya/klasörün kısa adı (yoksa boş).</summary>
+        public string FileName
+        {
+            get
+            {
+                if (_file == null) return "";
+                string name = System.IO.Path.GetFileName(_file.Path.TrimEnd('\\', '/'));
+                return string.IsNullOrEmpty(name) ? _file.Path : name;
+            }
+        }
+
+        /// <summary>Canlı durum: son değişiklikten bu yana geçen süre ve boyut; okunamıyorsa "okunamıyor".</summary>
+        public static string FileStatus(FileActivityMonitor file)
+        {
+            DateTime utc = DateTime.UtcNow;
+            if (file.IsPending) return "…";
+            if (file.IsUnreadable(utc)) return Loc.T("MainWindowLoop_Okunamiyor");
+            TimeSpan? since = file.SinceChange(utc);
+            string last = since.HasValue ? string.Format(Loc.T("ActivityWatcher_OnceDegisti"), TextFormat.MinSec(since.Value)) : Loc.T("ActivityWatcher_Degismedi");
+            return last + (file.Size >= 0 ? " · " + TextFormat.Size(file.Size) : "");
+        }
+
         public string CpuLabel()
         {
             return (_cpuProgram != null ? _cpuProgram.ProcessName + Loc.T("ActivityWatcher_Islemci") : Loc.T("ActivityWatcher_Islemci2")) + TextFormat.Percent(CpuValue);
@@ -170,6 +217,7 @@ namespace ShutdownMate.Services
             if (UseCpu) parts.Add(CpuLabel() + State(CpuActive));
             if (UseGpu) parts.Add(GpuLabel() + State(GpuActive));
             if (UseTransfer) parts.Add(TransferLabel() + State(TransferActive));
+            if (UseFile) parts.Add(FileLabel() + State(FileActive));
             if (UseProcess) parts.Add(ProcessName + (ProcessRunning ? Loc.T("ActivityWatcher_Acik") : Loc.T("ActivityWatcher_Kapandi")));
             return string.Join("  ·  ", parts);
         }

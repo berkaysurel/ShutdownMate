@@ -43,6 +43,7 @@ namespace ShutdownMate.Views
             new HomeItem { Key = "cond:cpu", Icon = SymbolRegular.DeveloperBoard24, Label = Loc.T("FullscreenWindow_Islemci"), Group = GroupConditions },
             new HomeItem { Key = "cond:transfer", Icon = SymbolRegular.Copy24, Label = Loc.T("MainWindowHome_DosyaAktarimi"), Group = GroupConditions },
             new HomeItem { Key = "cond:gpu", Icon = SymbolRegular.Desktop24, Label = Loc.T("FullscreenWindow_EkranKarti"), Group = GroupConditions },
+            new HomeItem { Key = "cond:file", Icon = SymbolRegular.Folder24, Label = Loc.T("MainWindowHome_DosyaKlasor"), Group = GroupConditions },
             new HomeItem { Key = "cond:process", Icon = SymbolRegular.Apps24, Label = Loc.T("MainWindowHome_ProgramKapanmasi"), Group = GroupConditions },
             new HomeItem { Key = "home:lastrun", Icon = SymbolRegular.History24, Label = Loc.T("MainWindowHome_SonCalistirmaYazisi"), Group = GroupExtras },
             new HomeItem { Key = "home:title", Icon = SymbolRegular.Home24, Label = Loc.T("MainWindowHome_AnaEkranBasligi"), Group = GroupExtras },
@@ -205,9 +206,9 @@ namespace ShutdownMate.Views
                 new[] { "mode:duration", "mode:clock", "mode:activity" }, false);
             _loading = wasLoading;
 
-            var cards = new[] { CondNetworkCard, CondCpuCard, CondTransferCard, CondGpuCard, CondProcessCard };
-            var keys = new[] { "cond:network", "cond:cpu", "cond:transfer", "cond:gpu", "cond:process" };
-            var checks = new[] { UseNetworkCheck, UseCpuCheck, UseTransferCheck, UseGpuCheck, UseProcessCheck };
+            var cards = new[] { CondNetworkCard, CondCpuCard, CondTransferCard, CondGpuCard, CondFileCard, CondProcessCard };
+            var keys = new[] { "cond:network", "cond:cpu", "cond:transfer", "cond:gpu", "cond:file", "cond:process" };
+            var checks = new[] { UseNetworkCheck, UseCpuCheck, UseTransferCheck, UseGpuCheck, UseFileCheck, UseProcessCheck };
             for (int i = 0; i < cards.Length; i++)
             {
                 bool hidden = IsHomeHidden(keys[i]);

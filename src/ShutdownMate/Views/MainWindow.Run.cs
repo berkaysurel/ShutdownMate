@@ -68,6 +68,25 @@ namespace ShutdownMate.Views
                     watcher.SetTransferSource(SelectedProgramName(TransferSourceCombo));
                 }
 
+                if (UseFileCheck.IsChecked == true)
+                {
+                    string path = FilePathBox.Text.Trim();
+                    if (path.Length == 0)
+                    {
+                        watcher.Dispose();
+                        ShowInfo(Loc.T("MainWindowRun_LutfenIzlenecekDosyaYaKlasor"));
+                        return;
+                    }
+                    // Arayüz iş parçacığında yalnızca bir kez, başlatırken var mı diye bakılır; sonraki ölçümler arka planda
+                    if (!System.IO.File.Exists(path) && !System.IO.Directory.Exists(path))
+                    {
+                        watcher.Dispose();
+                        ShowInfo(Loc.T("MainWindowRun_SecilenDosyaYaKlasorBulunamadi"));
+                        return;
+                    }
+                    watcher.SetFile(path);
+                }
+
                 if (UseProcessCheck.IsChecked == true)
                 {
                     var item = ProcessList.SelectedItem as ProcessItem;
@@ -127,7 +146,7 @@ namespace ShutdownMate.Views
             // Gözetim kaydı yalnızca kullanıcı onaylayıp açtıysa; kapalıyken hiçbir şey yazılmaz
             if (_settings.WatchRecordingEnabled)
             {
-                _recorder = new WatchRecorder(TextFormat.ActionFuture(action) + " · " + ModeLabel(),
+                _recorder = new WatchRecorder(TextFormat.ActionFuture(action) + " · " + ModeLabel() + (watcher != null && watcher.UseFile ? " · " + watcher.FileName : ""),
                     watcher == null ? null : watcher.ProcessName ?? watcher.CpuProgramName ?? watcher.GpuProgramName ?? watcher.NetworkProgramName,
                     watcher != null && watcher.UseProcess, _settings);
             }
@@ -201,7 +220,8 @@ namespace ShutdownMate.Views
             if (_recorder != null)
             {
                 sessionId = _recorder.Id;
-                _recorder.Finish(historyNote ?? Loc.T("MainWindowRun_YenidenKuruldu"));
+                historyNote = historyNote ?? Loc.T("MainWindowRun_YenidenKuruldu"); // kayıt klasörü Geçmiş'te sahipsiz kalmasın
+                _recorder.Finish(historyNote);
                 _recorder = null;
             }
             WatchNote.Visibility = Visibility.Collapsed;
@@ -216,6 +236,7 @@ namespace ShutdownMate.Views
             AppTitleBar.Title = AppTitle;
             RunningBanner.Visibility = Visibility.Collapsed;
             _critical = false;
+            ApplyHomeLayout(); // çalışırken gizlenen koşulların işareti, zamanlayıcı durunca kalkar
 
             if (wasRunning && historyNote != null)
             {
@@ -260,8 +281,11 @@ namespace ShutdownMate.Views
                 {
                     _ejecting = true;
                     int ok = 0;
-                    List<string> failed = await Task.Run(() => UsbEjectService.EjectAll(drives, out ok));
-                    _ejecting = false;
+                    List<string> failed;
+                    // Çıkarma istisna fırlatsa da bayrak kapanır ve güç işlemi engellenmez; hata geçmiş notuna yazılır
+                    try { failed = await Task.Run(() => UsbEjectService.EjectAll(drives, out ok)); }
+                    catch (Exception ex) { failed = new List<string> { ex.Message }; }
+                    finally { _ejecting = false; }
                     // Çıkarma sürerken İptal Et / Ertele denmişse güç komutu verilmez
                     if (_ejectAborted) { _ejectAborted = false; return; }
                     usb = UsbEjectService.Summarize(ok, failed);

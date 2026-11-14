@@ -234,7 +234,7 @@ namespace ShutdownMate.Controls
             WatchRecorder.Usage(out count, out bytes);
             DeleteRecordingsButton.IsEnabled = count > 0;
             UsageText.Text = count == 0 ? Loc.T("HistoryView_KayitliGozetimKaydiYok")
-                : Loc.T(count == 1 ? "HistoryView_Usage1" : "HistoryView_Usage", count, (bytes / (1024.0 * 1024.0)).ToString("0.#"));
+                : Loc.T(count == 1 ? "HistoryView_Usage1" : "HistoryView_Usage", count, (bytes / (1024.0 * 1024.0)).ToString("0.#", Loc.Culture));
         }
 
         private static UIElement PlainRow(string text)

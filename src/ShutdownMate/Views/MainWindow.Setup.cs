@@ -74,15 +74,17 @@ namespace ShutdownMate.Views
             return whole < t ? whole.AddMinutes(1) : whole;
         }
 
-        /// <summary>Belirli saat seçicisini seçilebilecek en erken saate getirir.</summary>
+        /// <summary>Belirli saat seçicisini ayara göre en erken, son kullanılan ya da sabit saate getirir.</summary>
         private void SetClockToEarliest(DateTime now)
         {
             DateTime earliest = EarliestClockTime(now);
             _clockBaseDate = now.Date;
-            if (earliest.Date == now.Date) ClockToday.IsChecked = true;
-            else ClockTomorrow.IsChecked = true;
-            ClockHour.Value = earliest.Hour;
-            ClockMinute.Value = earliest.Minute;
+            // Ayardan (sabit ya da son kullanılan saat) gelen saat en erkenden önce kalıyorsa ClockStartTime yarına atar
+            DateTime start = _settings.ClockStartTime(now, earliest) ?? earliest;
+            if (start.Date == now.Date) ClockToday.IsChecked = true; else ClockTomorrow.IsChecked = true;
+            UpdateClockLimits(now);
+            ClockHour.Value = start.Hour;
+            ClockMinute.Value = start.Minute;
             UpdateClockLimits(now);
         }
 
@@ -142,6 +144,24 @@ namespace ShutdownMate.Views
             UpdatePreview();
         }
 
+        private void FilePath_Changed(object sender, WinControls.TextChangedEventArgs e)
+        {
+            if (_loading) return;
+            UpdatePreview();
+        }
+
+        private void PickFile_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog { Title = Loc.T("MainWindowSetup_IzlenecekDosyayiSecin") };
+            if (dialog.ShowDialog(this) == true) { FilePathBox.Text = dialog.FileName; UseFileCheck.IsChecked = true; }
+        }
+
+        private void PickFolder_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new Microsoft.Win32.OpenFolderDialog { Title = Loc.T("MainWindowSetup_IzlenecekKlasoruSecin") };
+            if (dialog.ShowDialog(this) == true) { FilePathBox.Text = dialog.FolderName; UseFileCheck.IsChecked = true; }
+        }
+
         private void Option_Changed(object sender, RoutedEventArgs e)
         {
             if (_loading) return;
@@ -172,6 +192,7 @@ namespace ShutdownMate.Views
             Motion.SetVisible(CpuOptions, UseCpuCheck.IsChecked == true, 100, true);
             Motion.SetVisible(GpuOptions, UseGpuCheck.IsChecked == true, 100, true);
             Motion.SetVisible(TransferOptions, UseTransferCheck.IsChecked == true, 100, true);
+            Motion.SetVisible(FileOptions, UseFileCheck.IsChecked == true, 100, true);
             Motion.SetVisible(ProcessOptions, UseProcessCheck.IsChecked == true, 100, true);
 
             ForceCloseCard.IsEnabled = PowerService.SupportsForceClose(SelectedAction);
@@ -315,6 +336,7 @@ namespace ShutdownMate.Views
                     if (UseCpuCheck.IsChecked == true) names.Add(Loc.T("MainWindowSetup_Islemci"));
                     if (UseGpuCheck.IsChecked == true) names.Add(Loc.T("MainWindowSetup_EkranKarti"));
                     if (UseTransferCheck.IsChecked == true) names.Add(Loc.T("MainWindowSetup_DosyaAktarimi"));
+                    if (UseFileCheck.IsChecked == true) names.Add(Loc.T("MainWindowSetup_DosyaKlasor"));
                     if (UseProcessCheck.IsChecked == true)
                     {
                         var item = ProcessList.SelectedItem as ProcessItem;

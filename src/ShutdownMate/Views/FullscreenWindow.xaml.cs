@@ -90,6 +90,9 @@ namespace ShutdownMate.Views
         private bool _allowClose;
         private bool _critical;
         private bool _finalAlert;
+        private long _finalStartTicks; // uyarı kipine geçilen an (TickCount64)
+        private const int FinalKeyGraceMs = 1000; // uyarı açılırken başka pencerede yazan kullanıcının tuşu iptal sayılmasın
+        private bool FinalKeysActive => Environment.TickCount64 - _finalStartTicks >= FinalKeyGraceMs;
         private bool _confirming;
         private bool _sceneVisible = true;
         private bool _chromeVisible = true;
@@ -548,6 +551,7 @@ namespace ShutdownMate.Views
 
         private void UpdateFinal(CountdownState state)
         {
+            KeyHintText.Visibility = !_confirming && FinalKeysActive ? Visibility.Visible : Visibility.Collapsed; // ilk saniyede tuşlar kapalı, ipucu da gizli
             FinalHeadlineText.Text = state.FinalHeadline ?? "";
             FinalDetailText.Text = state.FinalDetail ?? "";
             FinalDetailText.Visibility = string.IsNullOrEmpty(state.FinalDetail) ? Visibility.Collapsed : Visibility.Visible;
@@ -579,6 +583,7 @@ namespace ShutdownMate.Views
         {
             if (on == _finalAlert) return;
             _finalAlert = on;
+            if (on) _finalStartTicks = Environment.TickCount64;
             SetConfirming(false);
 
             if (on)
@@ -822,7 +827,7 @@ namespace ShutdownMate.Views
 
             if (_finalAlert)
             {
-                if (!e.IsRepeat)
+                if (!e.IsRepeat && FinalKeysActive)
                 {
                     Key key = e.Key == Key.System ? e.SystemKey : e.Key;
                     if (key == Key.Enter || key == Key.Escape) RaiseCancel();
@@ -995,7 +1000,7 @@ namespace ShutdownMate.Views
             _confirming = on;
             ConfirmPanel.Visibility = on ? Visibility.Visible : Visibility.Collapsed;
             FinalButtons.Visibility = on ? Visibility.Collapsed : Visibility.Visible;
-            KeyHintText.Visibility = FinalButtons.Visibility; // onayda Enter çalışmaz, ipucu yanıltmasın
+            KeyHintText.Visibility = on || !FinalKeysActive ? Visibility.Collapsed : Visibility.Visible; // onayda Enter çalışmaz, ipucu yanıltmasın
             if (on) ActiveNotice.Visibility = Visibility.Collapsed;
         }
 

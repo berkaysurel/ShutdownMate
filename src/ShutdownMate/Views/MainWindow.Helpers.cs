@@ -55,13 +55,16 @@ namespace ShutdownMate.Views
             ExitFullscreen(false);
             if (_previewFullscreen != null) _previewFullscreen.CloseFromOwner();
             if (_watcher != null) _watcher.Dispose();
-            _metrics.Dispose();
+            // Ölçüm turu arka planda PdhCollectQueryData içindeyse PdhCloseQuery / kilit orada bitene dek bekler;
+            // arayüz iş parçacığında çağrılırsa pencere kapandıktan sonra süreç takılı kalır. Arka planda kapatılır (süreç bitince zaten düşer).
+            var metrics = _metrics;
+            System.Threading.Tasks.Task.Run(() => { try { metrics.Dispose(); } catch { } });
             _audio.Dispose();
             PowerService.SetKeepAwake(false);
             if (_settings.RememberLastChoices) SaveSetupToSettings();
             SettingsService.Save(_settings);
 
-            // shortcut: çıkıştaki takılmanın kök nedeni bulunmadı, görülürse süreç yığını alınıp giderilmeli.
+            // shortcut: takılma düzeltildi ama güvence kaldı; error.log'da yeniden görülürse süreç yığını alınıp nedeni aranmalı.
             // Takılı süreç tek kopya kilidini tuttuğu için uygulama yeniden açılamaz; her şey kaydedildi, süreç sonlandırılır.
             var exitGuard = new System.Threading.Thread(() =>
             {

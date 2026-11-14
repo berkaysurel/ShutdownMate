@@ -236,7 +236,8 @@ namespace ShutdownMate.Services
                 new ScaleTransform(64.0 / image.PixelWidth, 64.0 / image.PixelHeight)), PixelFormats.Bgr32, null, 0);
             var pixels = new byte[tiny.PixelWidth * tiny.PixelHeight * 4];
             tiny.CopyPixels(pixels, tiny.PixelWidth * 4, 0);
-            foreach (byte b in pixels) if (b > 8) return false;
+            // Her dördüncü bayt renk değil (Bgr32'de 0 ya da 255 çıkabilir); yalnızca B, G, R bakılır
+            for (int i = 0; i < pixels.Length; i++) if (i % 4 != 3 && pixels[i] > 8) return false;
             return true;
         }
 

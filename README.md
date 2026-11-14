@@ -60,7 +60,7 @@ Options that go with an action:
 | Trigger | How it works |
 |---|---|
 | After a duration | Pick hours and minutes with large spinners (mouse wheel, arrow keys, press and hold, or type). Quick duration buttons start at 15 min, 30 min, 1 h, 2 h and 3 h; you can edit them, up to 8 |
-| At a set time | Today or tomorrow. A time in the past cannot be chosen, and moving the hour past 23 switches to tomorrow |
+| At a set time | Today or tomorrow. A time in the past cannot be chosen, and moving the hour past 23 switches to tomorrow. In Settings you choose what the picker starts with: the earliest possible time, the last time you used, or a fixed time |
 | When tasks finish | Waits for the work you choose, then acts. See below |
 
 The countdown follows Windows time zone rules, so a daylight saving change does not shift your timer. You can turn this off.
@@ -77,6 +77,7 @@ Pick one or more conditions. The timer starts its final wait only when all of th
 | Processor | CPU usage below a percentage. Fits renders and exports from programs like Premiere or DaVinci Resolve |
 | Graphics card | GPU usage below a percentage, for GPU renders |
 | File transfer | Disk read and write activity during copies and backups. In automatic mode it picks the drives that are actually busy and judges completion by the median of the last 20 seconds, so short bursts do not delay it |
+| File or folder | A file or folder you pick, such as a render output. The work counts as finished when it stops growing and changing. If the path cannot be read (deleted, drive unplugged), the condition is never treated as calm, so an unreadable path cannot shut the PC down. For frame by frame renders, choose a calm period longer than the gap between two frames |
 | Program closing | Waits until every window and process of the chosen program has closed |
 
 How completion is decided:

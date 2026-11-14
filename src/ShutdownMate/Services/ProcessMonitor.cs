@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
 
 namespace ShutdownMate.Services
 {
@@ -12,7 +13,13 @@ namespace ShutdownMate.Services
     internal sealed class ProcessMonitor : IDisposable
     {
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool GetProcessIoCounters(IntPtr hProcess, out IO_COUNTERS counters);
+        private static extern bool GetProcessIoCounters(SafeProcessHandle hProcess, out IO_COUNTERS counters);
+
+        // Process.Handle tam yetkiyle açar ve yönetici olarak çalışan süreçte reddedilir; sınırlı sorgu yetkisi yeter
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern SafeProcessHandle OpenProcess(uint desiredAccess, bool inheritHandle, int processId);
+
+        private const uint ProcessQueryLimitedInformation = 0x1000;
 
         [StructLayout(LayoutKind.Sequential)]
         private struct IO_COUNTERS
@@ -122,13 +129,16 @@ namespace ShutdownMate.Services
                     try
                     {
                         IO_COUNTERS counters;
-                        if (GetProcessIoCounters(p.Handle, out counters))
+                        using (SafeProcessHandle handle = OpenProcess(ProcessQueryLimitedInformation, false, pid))
                         {
-                            ulong bytes = counters.ReadTransferCount + counters.WriteTransferCount + counters.OtherTransferCount;
-                            newIo[pid] = bytes;
-                            ulong previous;
-                            if (_lastIo.TryGetValue(pid, out previous) && bytes >= previous)
-                                ioDeltaBytes += bytes - previous;
+                            if (!handle.IsInvalid && GetProcessIoCounters(handle, out counters))
+                            {
+                                ulong bytes = counters.ReadTransferCount + counters.WriteTransferCount + counters.OtherTransferCount;
+                                newIo[pid] = bytes;
+                                ulong previous;
+                                if (_lastIo.TryGetValue(pid, out previous) && bytes >= previous)
+                                    ioDeltaBytes += bytes - previous;
+                            }
                         }
                     }
                     catch
